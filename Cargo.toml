@@ -1,0 +1,14 @@
+[package]
+name = "nom-reader"
+description = "feed a nom parser from anything implementing Read"
+documentation = "https://docs.rs/nom-reader"
+repository = "https://github.com/barzamin/nom-reader"
+readme = "README.md"
+keywords = ["nom"]
+categories = ["parsing"]
+license = "MIT"
+version = "0.1.0"
+authors = ["Erin <erin@hashbang.sh>"]
+
+[dependencies.nom]
+version = "^3.2"
