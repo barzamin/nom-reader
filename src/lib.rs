@@ -2,23 +2,23 @@ extern crate nom;
 
 use std::io::{self, Read};
 
-
-pub fn read<P, O, E, R>(parser: P, mut rdr: R) -> Result<O, E>
-    where R: Read,
-          E: From<nom::ErrorKind> + From<io::Error>,
-          P: Fn(&[u8]) -> nom::IResult<&[u8], O>,
+pub fn read<P, T, E, R, Any>(parser: P, mut rdr: R) -> Result<T, E>
+where
+    R: Read,
+    E: From<io::Error>,
+    P: Fn(&[u8]) -> Result<T, nom::Err<E>>,
 {
-    let mut input: Vec<u8> = Vec::new();
+    let mut input = Vec::new();
     loop {
         let to_read = match parser(&input) {
-            Ok((_, parsed)) => return Ok(parsed),
+            Ok(parsed) => return Ok(parsed),
             Err(nom::Err::Incomplete(needed)) => {
                 match needed {
-                    nom::Needed::Unknown => 1,     // read one byte
+                    nom::Needed::Unknown => 1, // read one byte
                     nom::Needed::Size(len) => len,
                 }
-            },
-            Err(e) => return Err(e.into_error_kind().into()),
+            }
+            Err(nom::Err::Failure(e)) | Err(nom::Err::Error(e)) => return Err(e),
         };
 
         (&mut rdr).take(to_read as u64).read_to_end(&mut input)?;
