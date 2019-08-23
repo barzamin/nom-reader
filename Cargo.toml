@@ -11,4 +11,4 @@ version = "0.2.0"
 authors = ["Erin <erin@hashbang.sh>"]
 
 [dependencies.nom]
-version = "^4.0"
+version = "^5.0"
